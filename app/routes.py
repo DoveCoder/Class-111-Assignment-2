@@ -1,0 +1,99 @@
+from flask import Flask, request
+from datetime import datetime
+
+app = Flask(__name__)
+
+from app.database import user
+from app.database import vehicle
+
+@app.route("/")
+def version():
+    out = {
+        "ok": True,
+        "message": "Success",
+        "server_time": datetime.now().strftime("%F %H:%M:%S"),
+        "version": "1.0.0"
+    }
+    return out
+
+@app.route("/users", methods=["POST"])
+def create_user():
+    user_data = request.json
+    out = {
+        "ok": True,
+        "message": "Success",
+        "new_id": user.insert(
+            user_data.get("first_name"),
+            user_data.get("last_name"),
+            user_data.get("hobbies")
+        )
+    }
+    return out, 201
+
+@app.route("/users", methods=["GET"])
+def get_all_users():
+    out = {
+        "ok": True,
+        "message": "Success",
+        "users": user.scan()
+    }
+    return out
+
+@app.route("/users/<int:pk>", methods=["GET"])
+def get_single_user(pk):
+    out = {
+        "ok": True,
+        "message": "Success",
+        "user": user.read(pk)
+    }
+    return out
+
+@app.route("/users/<int:pk>", methods=["PUT"])
+def update_user(pk):
+    user_data = request.json
+    out = {
+        "ok": True,
+        "Message": "Success"
+    }
+    user.update(pk,
+    user_data.get("first_name"),
+    user_data.get("last_name"),
+    user_data.get("hobbies"))
+    return out
+
+@app.route("/users/<int:pk>", methods=["DELETE"])
+def deactivate_user(pk):
+    user.deactivate_user(pk)
+    out = {
+        "ok": True,
+        "message": "Success"
+    }
+    return out
+
+@app.route("/users/<int:pk>/vehicles", methods=["GET"])
+def get_vehicles_by_user_id(pk):
+    vehicles = vehicle.scan(pk)
+    out = {
+        "ok": True,
+        "message": "Success",
+        "vehicles": vehicles
+    }
+
+    return out
+
+@app.route("/vehicles", methods=["POST"])
+def create_vehicle():
+    vehicle_data = request.json
+    out = {
+        "ok": True,
+        "message": "Success",
+        "new_id": vehicle.insert(
+            vehicle_data.get("license_plate"),
+            vehicle_data.get("v_type"),
+            vehicle_data.get("color"),
+            vehicle_data.get("parking_spot_no"),
+            vehicle_data.get("description"),
+            vehicle_data.get("user_id"),
+        )
+    }
+    return out, 201
