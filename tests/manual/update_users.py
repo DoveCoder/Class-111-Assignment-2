@@ -16,5 +16,6 @@ def update_user():
     else:
         print("Something went wrong when trying to update.")
 
-
+if __name__ == "__main__":
+    update_user()
 

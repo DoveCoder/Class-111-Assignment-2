@@ -16,7 +16,7 @@ def output_formatter(results: tuple):
 
     return out
 
-def insert(license_plate, v_type, color, parking_spot_no, user_id, description=None ):
+def insert(license_plate, v_type, color, parking_spot_no, description, user_id):
     value_tuple = (license_plate, v_type, color, parking_spot_no, description, user_id)
     query = """
         INSERT INTO vehicle (
@@ -36,9 +36,9 @@ def insert(license_plate, v_type, color, parking_spot_no, user_id, description=N
     cursor.close()
     return last_row_id
 
-def scan(pk):
+def scan():
     cursor = get_db().execute(
-        "SELECT * FROM vehicle WHERE user_id=?", (pk, ))
+        "SELECT * FROM vehicle")
     results = cursor.fetchall()
     cursor.close()
     return output_formatter(results)
@@ -53,7 +53,7 @@ def read(pk):
 def update(pk, license_plate, v_type, color, parking_spot_no, description, user_id):
     value_tuple = (license_plate, v_type, color, parking_spot_no, description, user_id, pk)
     query = """
-        UPDATE user 
+        UPDATE vehicle
         SET license_plate=?,
         v_type=?,
         color=?,

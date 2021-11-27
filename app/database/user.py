@@ -52,19 +52,19 @@ def update(pk, first_name, last_name, hobbies):
         SET first_name=?,
         last_name=?,
         hobbies=?
-        WHERE id =?
+        WHERE id=?
     """
     cursor = get_db()
     cursor.execute(query, value_tuple)
     cursor.commit()
     cursor.close()
 
-    def deactivate_user(pk):
-        cursor = get_db()
-        cursor.execute(
-            "UPDATE user SET active=0 WHERE id=?", (pk, ))
-        cursor.commit()
-        cursor.close()
+def deactivate_user(pk):
+    cursor = get_db()
+    cursor.execute(
+        "UPDATE user SET active=0 WHERE id=?", (pk, ))
+    cursor.commit()
+    cursor.close()
 
 
 

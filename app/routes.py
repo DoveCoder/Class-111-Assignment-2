@@ -58,7 +58,8 @@ def update_user(pk):
     user.update(pk,
     user_data.get("first_name"),
     user_data.get("last_name"),
-    user_data.get("hobbies"))
+    user_data.get("hobbies")
+    )
     return out
 
 @app.route("/users/<int:pk>", methods=["DELETE"])
@@ -70,15 +71,24 @@ def deactivate_user(pk):
     }
     return out
 
-@app.route("/users/<int:pk>/vehicles", methods=["GET"])
-def get_vehicles_by_user_id(pk):
-    vehicles = vehicle.scan(pk)
+@app.route("/<int:pk>/vehicles", methods=["GET"])
+def get_vehicle_by_user_id(pk):
+    vehicles = vehicle.read(pk)
     out = {
         "ok": True,
         "message": "Success",
         "vehicles": vehicles
     }
 
+    return out
+
+@app.route("/vehicles", methods=["GET"])
+def get_all_vehicles():
+    out = {
+        "ok": True,
+        "message": "Success",
+        "users": vehicle.scan()
+    }
     return out
 
 @app.route("/vehicles", methods=["POST"])
@@ -97,3 +107,21 @@ def create_vehicle():
         )
     }
     return out, 201
+
+@app.route("/<int:pk>/vehicles", methods=["PUT"])
+def update_vehicle(pk):
+    vehicle_data = request.json
+    out = {
+        "ok": True,
+        "Message": "Success"
+    }
+    vehicle.update(pk,
+            vehicle_data.get("license_plate"),
+            vehicle_data.get("v_type"),
+            vehicle_data.get("color"),
+            vehicle_data.get("parking_spot_no"),
+            vehicle_data.get("description"),
+            vehicle_data.get("user_id"),
+        )
+    
+    return out
